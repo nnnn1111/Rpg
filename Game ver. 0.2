@@ -1,0 +1,335 @@
+#-*-coding:utf8;-*-
+#qpy:3
+#qpy:console
+import random
+
+print("This is console module")
+#t = "/storage/emulated/0/Download/4pda/"
+t = "C:\Game/"
+t += input("enter you nickname:")
+mg = 0
+def mapgen(t):
+    x = []
+    print("This is console module")
+    t+="m.txt"
+    som = int(input("enter size of map (0 = deafut):"))
+    if som == 0:
+        som = 500
+    file=open(t, "w")
+    z = 0
+    for i in range(som):
+        x.append("")
+        noc = som
+        a = 0
+        while a != noc:
+            a += 1
+            g = abs(random.randint(1, 100))
+            if g > 3 and g < 8:
+                x[i] += "t"
+            elif (g>7) and (g<11):
+            	   x[i] += "e"
+            elif g == 16 or g == 17:
+            	   x[i] += "h"
+            elif g == 18 or g == 19:
+            	   x[i] += "c"
+            elif g == 20:
+            	   x[i] += "w"
+            elif g == 30:
+            	   x[i] += "b"
+            else:
+            	   x[i] += "n"
+            z += 1
+        file.write(''.join(x[i]))
+    print(z)
+    file.close()
+    return(som)
+def ran(t, z, s, x, y, w): #z wi w way s len
+    #evel = ran(map, wi, le, wex, wey, way) 
+    #t += "m.txt" #t map x wex y wey
+    #file=open(t, "r")
+    if w == "w":
+        h = t[wey-int(le/2)][x-int(z/2):x+int(z/2)+1]
+    if w == "s":
+        h = t[y+int(le/2)+1][x-int(z/2):x+int(z/2)+1]
+    if w == "a":
+        h = ''
+        for i in range(le):
+            h += t[y-int(le/2)+i][x-int(z/2)]
+    if w == "d":
+        h = ''
+        for i in range(le):
+            h += t[y-int(le/2)+i][x+int(z/2)]
+    return h
+le = int(input("enter lenth:"))
+wi = int(input("enter width:"))
+lmv = wi  #remove
+lmg = le  #remove
+all = []
+for i in range(wi):     #generating empty map
+    all.append("")
+    for a in range(le):
+        if i == int((wi)/2) and a == int(le/2):
+            all[i] += "@"
+        else:
+            all[i] += "n"
+yweapon = 0
+yarmor = 0
+rn = 0    #length of life
+so = "n"
+sn = "n"
+n = 0
+da = 0
+som = 0  #size of map
+nom = 0 #number of mission
+noe = 0 #number of enemy
+mc = True #is mission completed
+bs = False #will boss apear
+maxhp = 150
+hp = maxhp
+money = 0
+wex = 50    #cordinates x
+wey = 50    #cordinates y
+th = "d"
+loot = 0
+state = [yweapon, yarmor, hp, maxhp, money, loot, nom, noe, wex, wey, som, mc, bs]
+try:
+    file = open((t + ".txt"), "r")   #trying to open save
+except IOError:
+    file = open((t + ".txt"), "w")   #creating new save
+    for i in state:
+            file.write(str(i) + "\n")
+try:
+    line = file.readlines()
+    print(line)
+    for i in range(len(line)-2):
+        print(i)
+        state[i] = int(line[i])
+    bs = str(line[-1:-1]).startswith("True")
+    mc = str(line[-2:-1]).startswith("True")  #importing old save
+    yweapon, yarmor, hp, maxhp, money, loot, nom, noe, wex, wey, som, mc, bs = state[:]
+except IOError:
+    print("Creating new user...")
+file.close()
+map = []    #map opening
+try:
+    file=open((t + "m.txt"), "r")  #trying to open map
+except IOError:
+    print("generating new map....")
+    som = mapgen(t)  #new map generation
+    wey = int(som/2)
+    wex = wey
+    file=open((t + "m.txt"), "r")
+for i in range(som):
+    map.append(file.read(som))
+file.close()
+weapon = ("Nothing", "Little stone", "Big stone", "Stone knife",
+          "Pig iron knife", "Iron knife", "Iron dagger", "Iron short sword",
+          "Iron long sword", "Iron klaymore", "Still knife", "Still dagger",
+          "Still short sword", "Still long sword")
+armor = ("Nothing", "Leather armor+0", "Leather armor+1", "Leather armor+2",
+         "Leather armor+3", "Leather armor+4", "Leather armor+5")
+enemy = ("1 enemy", "2 enemy", "3 enemy")
+for i in range(wi):
+    print(all[i])
+
+while True:
+    state = [yweapon, yarmor, hp, maxhp, money, loot, nom, noe, wex, wey, som, mc, bs,]
+    n += 1
+    rn = abs(int(random.gauss(1, 3)))   #randoming game    
+    if hp < 0:   #killing
+        print("you died...")
+        print("you live:", n, "days")
+        file = open(t, "w")
+        file.close()
+        break
+    way = input("Enter way(wasd) or take(t) or exit&save(e):")
+    #evew = ran(map, wi, le, wex, wey, x)  #x = way of movement
+    #evel = ran(map, wi, le, wex, wey, x)
+    #if evew.count != 0 or evel.count != 0:
+    #    bs = False
+    #print(evew)
+    if way == "debug":
+        maxhp = 9999
+        hp = 9999
+        yarmor = len(armor)-1
+    if way == "e":
+        file = open((t + ".txt"), "w")
+        for i in state:
+            file.write(str(i) + "\n")
+        file.close()
+        print("exiting...")
+        break
+    if way == "w" and all[int(lmv/2)-1][int(lmg/2)] != "t":
+        #print(int(lmv/2), int(lmg/2)+1, all[int(lmv/2)][int(lmg/2)+1])
+        print(all)
+        wey += 1
+        evel = ran(map, wi, le, wex, wey, way) 
+        so = all[int(lmv/2-1)][int(lmg/2)]        
+        i = lmv
+        while i >= 1:
+            i -= 1
+            if i == (int(lmv/2)+1):
+                all[i] = all[i-1][:int(lmg/2)]+sn+all[i-1][int(lmg/2)+1:]
+            elif i == (int(lmv/2)):
+                all[i] = all[i-1][:int(lmg/2)]+"@"+all[i-1][int(lmg/2)+1:]
+            else:
+                all[i] = all[i-1]
+        all[0] = ''.join(evel)
+        sn = so
+    elif way == "a" and all[int(lmv/2)][int(lmg/2)-1] != "t":
+        print(all)
+        wex -= 1
+        evew = ran(map, wi, le, wex, wey, way) 
+        so = all[int(lmv/2)][int(lmg/2)-1]
+        for i in range(lmv):
+            if i != int((lmv/2)):
+                all[i] = evew[i]+all[i][0:(lmg-1)]
+            elif i == int((lmv/2)):
+                all[i] = evew[i]+all[i][0:int(lmg/2)-1]+"@"+sn+all[i][int(lmg/2)+1:(lmg-1)]
+        sn = so
+    elif way == "s" and all[int(lmv/2)+1][int(lmg/2)] != "t":
+        print(all)
+        wey -=1
+        evel = ran(map, wi, le, wex, wey, way) 
+        so = all[int(lmv/2)+1][int(lmg/2)]
+        for i in range(lmv-1):
+            if i == (int(lmv/2)-1):
+                all[i] = all[i+1][:int(lmg/2)]+sn+all[i+1][int(lmg/2)+1:]
+            elif i == (int(lmv/2)):
+                all[i] = all[i+1][:int(lmg/2)]+"@"+all[i+1][int(lmg/2)+1:]
+            else:
+                all[i] = all[i+1]
+        all[lmv-1] = ''.join(evel)
+        sn = so
+    elif way == "d" and all[int(lmv/2)][int(lmg/2)+1] != "t":
+        print(all)
+        wex += 1
+        evew = ran(map, wi, le, wex, wey, way) 
+        so = all[int(lmv/2)][int(lmg/2)+1]
+        for i in range(lmv):
+            if i != int(lmv/2):
+                all[i] = all[i][1:(lmg)]+evew[i]
+            elif i == int(lmv/2):
+                all[i] = all[i][1:int(lmg/2)]+sn+"@"+all[i][int(lmg/2+2):(lmg)]+evew[i]
+        sn = so
+    elif way != "t":
+        print("you cant go there!")
+    print("you have:", hp, " hp")
+    if noe > 0:
+        print("you should kill ", noe, "enemy")
+    elif nom != 0 and noe == 0:
+        print("mission complete")
+    for i in range(wi):    #showing map
+        print(all[i])
+    if all[int(lmv/2-1)][int(lmg/2)] == "w"  or all[int(lmv/2)][int(lmg/2-1)] == "w" or all[int(lmv/2)][int(lmg/2+1)] == "w" or all[int(lmv/2+1)][int(lmg/2)] == "w":            
+        try:
+            if way == "t":   #getting new weapon or armor
+                if all[int(lmv/2-1)][int(lmg/2)] == "w":
+                    all[int(lmv/2-1)] = all[int(lmv/2-1)][:int(lmg/2)]+"n"+all[int(lmv/2-1)][int(lmg/2+1):]
+                elif all[int(lmv/2)][int(lmg/2-1)] == "w":
+                    all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2-1)]+"n"+all[int(lmv/2)][int(lmv/2):]
+                elif all[int(lmv/2)][int(lmg/2+1)] == "w":
+                    all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2+1)]+"n"+all[int(lmv/2)][int(lmg/2+2):]
+                elif all[int(lmv/2+1)][int(lmg/2)] == "w":
+                    all[int(lmv/2+1)] = all[int(lmv/2+1)][:int(lmg/2)]+"n"+all[int(lmv/2+1)][int(lmg/2+1):]
+                if random.randint(1, 2) == 1:
+                    yweapon += 1
+                    print("you new weapon is:", weapon[yweapon])
+                    #bweapon = yweapon*8
+                else:
+                    yarmor += 1
+                    print("you new armor is:", armor[yarmor])
+                    #barmor = yarmor*2 ##
+        except:
+            print("you have the best weapon or armor")
+            continue
+    if all[int(lmv/2-1)][int(lmg/2)] == "h"  or all[int(lmv/2)][int(lmg/2-1)] == "h" or all[int(lmv/2)][int(lmg/2+1)] == "h" or all[int(lmv/2+1)][int(lmg/2)] == "h":
+        if hp < maxhp and way == "t":    #getting hp
+            hp += random.randint(1, 50)
+            if hp > maxhp:    #redusing hp to normal
+                hp = maxhp
+            print("you hp:", hp)
+            if all[int(lmv/2-1)][int(lmg/2)] == "h":
+                all[int(lmv/2-1)] = all[int(lmv/2-1)][:int(lmg/2)]+"n"+all[int(lmv/2-1)][int(lmg/2+1):]
+            elif all[int(lmv/2)][int(lmg/2-1)] == "h":
+                all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2-1)]+"n"+all[int(lmv/2)][int(lmv/2):]
+            elif all[int(lmv/2)][int(lmg/2+1)] == "h":
+                all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2+1)]+"n"+all[int(lmv/2)][int(lmg/2+2):]
+            elif all[int(lmv/2+1)][int(lmg/2)] == "h":
+                all[int(lmv/2+1)] = all[int(lmv/2+1)][:int(lmg/2)]+"n"+all[int(lmv/2+1)][int(lmg/2+1):]
+        elif hp == maxhp:
+            print("you hp is max")
+    if all[int(lmv/2-1)][int(lmg/2)] == "e"  or all[int(lmv/2)][int(lmg/2-1)] == "e" or all[int(lmv/2)][int(lmg/2+1)] == "e" or all[int(lmv/2+1)][int(lmg/2)] == "e":  #spauning enemy
+        ehp = 0
+        en = random.randint(1, len(enemy))-1
+        print("There is an enemy:", enemy[en])
+        ehp = 50+50*en+yweapon*20    #calculating enemy hp
+        while ehp > 0:     #it is battle
+            da = abs(int(random.gauss(10, 20-(yarmor*2))))
+            print("damage you have:", da)
+            hp -= da
+            print("hp you have:", hp)
+            eda = abs(int(random.gauss(10, 30+(yweapon*8))))
+            ehp -= eda
+            print("enemy hp:", ehp)
+            #money+=en*300
+        loot += (en+1)*30
+        noe -= 1
+        if noe == 0 and nom%10 != 0:
+            mc = True
+        print("loot =", loot)
+        if all[int(lmv/2-1)][int(lmg/2)] == "e":
+            all[int(lmv/2-1)] = all[int(lmv/2-1)][:int(lmg/2)]+"n"+all[int(lmv/2-1)][int(lmg/2+1):]
+        elif all[int(lmv/2)][int(lmg/2-1)] == "e":
+            all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2-1)]+"n"+all[int(lmv/2)][int(lmv/2):]
+        elif all[int(lmv/2)][int(lmg/2+1)] == "e":
+            all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2+1)]+"n"+all[int(lmv/2)][int(lmg/2+2):]
+        elif all[int(lmv/2+1)][int(lmg/2)] == "e":
+            all[int(lmv/2+1)] = all[int(lmv/2+1)][:int(lmg/2)]+"n"+all[int(lmv/2+1)][int(lmg/2+1):]
+    if all[int(lmv/2-1)][int(lmg/2)] == "b"  or all[int(lmv/2)][int(lmg/2-1)] == "b" or all[int(lmv/2)][int(lmg/2+1)] == "b" or all[int(lmv/2+1)][int(lmg/2)] == "b":  #spauning enemy
+        ehp = 0
+        print("There is a BOSS!")
+        bhp = abs(int(random.gauss(1, 2)))
+        ehp = 300+yweapon*20+bhp*10    #calculating boss hp
+        while ehp > 0:     #it is battle
+            da = abs(int(random.gauss(10, 20-(yarmor*2))))
+            print("damage you have:", da)
+            hp -= da
+            print("hp you have:", hp)
+            eda = abs(int(random.gauss(10, 30+(yweapon*8))))
+            ehp -= eda
+            print("enemy hp:", ehp)
+            #money+=en*300
+        loot += 150
+        noe -= 2
+        if nom%10 == 0:
+            mc = True
+        print("loot =", loot)
+        if all[int(lmv/2-1)][int(lmg/2)] == "b":
+            all[int(lmv/2-1)] = all[int(lmv/2-1)][:int(lmg/2)]+"n"+all[int(lmv/2-1)][int(lmg/2+1):]
+        elif all[int(lmv/2)][int(lmg/2-1)] == "b":
+            all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2-1)]+"n"+all[int(lmv/2)][int(lmv/2):]
+        elif all[int(lmv/2)][int(lmg/2+1)] == "b":
+            all[int(lmv/2)] = all[int(lmv/2)][:int(lmg/2+1)]+"n"+all[int(lmv/2)][int(lmg/2+2):]
+        elif all[int(lmv/2+1)][int(lmg/2)] == "b":
+            all[int(lmv/2+1)] = all[int(lmv/2+1)][:int(lmg/2)]+"n"+all[int(lmv/2+1)][int(lmg/2+1):]   
+    if all[int(lmv/2-1)][int(lmg/2)] == "c"  or all[int(lmv/2)][int(lmg/2-1)] == "c" or all[int(lmv/2)][int(lmg/2+1)] == "c" or all[int(lmv/2+1)][int(lmg/2)] == "c":
+        if way == "t":
+            th = "n"
+            while th != "o":
+                th = input("Enter S if shop, i if inn, s if seller, m if mission, o if exit:")
+                if th == "S":
+                    want = input("Enter w if weapon or a if armor(q exit):")
+                    if want == "w":
+                        if money > (yweapon+1)*300 and yweapon+1 < len(weapon):
+                            money -= (yweapon+1)*300
+                            yweapon += 1
+                            print("you new weapon is:", weapon[yweapon])
+                            print("your money:", money)
+                        else: print("you dont have money")
+                    if want == "a":
+                        if money > (yarmor+1)*300 and yarmor+1 < len(armor):
+                            money -= (yarmor+1)*300
+                            yarmor += 1
+                            print("you new armor is:", armor[yarmor])
+                  

@@ -332,4 +332,34 @@ while True:
                             money -= (yarmor+1)*300
                             yarmor += 1
                             print("you new armor is:", armor[yarmor])
-                  
+                            print("your money:", money)
+                        else: print("you dont have money")
+                if th == "i" and money > 300:
+                    money -= 300
+                    hp = maxhp
+                    print("you sleeping, you hp:", hp)
+                if th == "s":
+                    money += loot*10
+                    loot = 0
+                    print("your money:", money)
+                if th == "m" and mc is True:
+                    if int(nom%10+1) == 0 and mc is True and nom != 0:
+                        maxhp += 20
+                        hp += 20
+                    if nom == 0:
+                        mg = abs(int(random.gauss(0, 8)))+1
+                        noe = mg
+                        nom += 1
+                        print("you first mission is to kill ", noe, " enemy")
+                    elif int((nom+1)%10) == 0:
+                        bs = True
+                        nom += 1
+                        print("you new mission is : to kill a boss")
+                    else:
+                        money += mg*200
+                        mg = abs(int(random.gauss(0, 8)))
+                        noe = mg
+                        nom += 1
+                        print("you new mission is to kill ", noe, " enemy")
+                    mc = False
+                    
